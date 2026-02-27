@@ -23,10 +23,10 @@ const success = (statusCode = 200, body = null, message = "Success") => {
     });
 };
 
-const error = (statusCode = 500, body = null, message = "Internal Server Error") => {
+const error = (statusCode = 500, details = null, message = "Internal Server Error") => {
     return buildResponse (statusCode, {
-        success : true,
-        body,
-        message
+        success : false,
+        message, 
+        ...(details && {details})
     });
 };
