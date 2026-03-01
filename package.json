@@ -1,0 +1,32 @@
+{
+  "name": "bookstore-serverless-api",
+  "version": "1.0.0",
+  "description": "Serverless Bookstore API using AWS Lambda, DynamoDB, and S3",
+  "main": "src/handler/bookHandler.js",
+  "type": "commonjs",
+  "scripts": {
+    "start": "node src/handler/bookHandler.js",
+    "deploy": "serverless deploy",
+    "remove": "serverless remove"
+  },
+  "keywords": [
+    "aws",
+    "lambda",
+    "dynamodb",
+    "s3",
+    "serverless",
+    "nodejs"
+  ],
+  "author": "Your Name",
+  "license": "ISC",
+  "dependencies": {
+    "@aws-sdk/client-dynamodb": "^3.0.0",
+    "@aws-sdk/lib-dynamodb": "^3.0.0",
+    "@aws-sdk/client-s3": "^3.0.0",
+    "@aws-sdk/s3-request-presigner": "^3.0.0",
+    "uuid": "^9.0.0"
+  },
+  "devDependencies": {
+    "serverless": "^3.0.0"
+  }
+}
