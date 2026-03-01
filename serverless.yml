@@ -1,0 +1,76 @@
+service: bookstore-serverless-api
+
+frameworkVersion: "3"
+
+provider:
+  name: aws
+  runtime: nodejs18.x
+  region: ap-south-1   # Change if needed
+  stage: dev
+  environment:
+    BOOKS_TABLE: BookstoreBooks
+    COVERS_BUCKET: bookstore-covers
+
+  iam:
+    role:
+      statements:
+        # DynamoDB Permissions
+        - Effect: Allow
+          Action:
+            - dynamodb:PutItem
+            - dynamodb:GetItem
+            - dynamodb:Scan
+            - dynamodb:UpdateItem
+            - dynamodb:DeleteItem
+          Resource:
+            - arn:aws:dynamodb:${aws:region}:${aws:accountId}:table/BookstoreBooks
+
+        # S3 Permissions
+        - Effect: Allow
+          Action:
+            - s3:PutObject
+            - s3:DeleteObject
+          Resource:
+            - arn:aws:s3:::bookstore-covers/*
+
+functions:
+  bookHandler:
+    handler: src/handler/bookHandler.handler
+    events:
+      - http:
+          path: books
+          method: ANY
+          cors: true
+      - http:
+          path: books/{id}
+          method: ANY
+          cors: true
+      - http:
+          path: books/{id}/upload-url
+          method: ANY
+          cors: true
+
+resources:
+  Resources:
+
+    BooksTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: BookstoreBooks
+        BillingMode: PAY_PER_REQUEST
+        AttributeDefinitions:
+          - AttributeName: bookId
+            AttributeType: S
+        KeySchema:
+          - AttributeName: bookId
+            KeyType: HASH
+
+    CoversBucket:
+      Type: AWS::S3::Bucket
+      Properties:
+        BucketName: bookstore-covers
+        PublicAccessBlockConfiguration:
+          BlockPublicAcls: false
+          BlockPublicPolicy: false
+          IgnorePublicAcls: false
+          RestrictPublicBuckets: false
